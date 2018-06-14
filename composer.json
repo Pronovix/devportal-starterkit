@@ -1,0 +1,112 @@
+{
+    "authors": [
+        {
+            "name": "",
+            "role": ""
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "scripts/composer/ScriptHandler.php"
+        ],
+        "psr-4": {
+            "": "features/bootstrap",
+            "Drupal\\Core\\Composer\\": "core/lib/Drupal/Core/Composer"
+        }
+    },
+    "config": {
+        "bin-dir": "bin",
+        "discard-changes": true,
+        "platform": {
+            "php": "7.1"
+        },
+        "sort-packages": true
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "description": "Project template for Drupal 8 projects with composer",
+    "extra": {
+        "drupal-scaffold": {
+            "excludes": [
+                ".htaccess",
+                "robots.txt"
+            ]
+        },
+        "installer-paths": {
+            "drush/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ]
+        },
+        "merge-plugin": {
+            "include": [
+                "web/modules/custom/*/composer.json"
+            ],
+            "merge-extra": false,
+            "recurse": false,
+            "replace": false
+        },
+        "patches": {
+			"drupal/core": {
+                "Time Ago summary does not render on Manage Display for Datetime": "https://www.drupal.org/files/issues/2686409-45.patch"
+            }
+        }
+    },
+    "license": "GPL-2.0+",
+    "minimum-stability": "dev",
+    "name": "pronovix/drupal-project",
+    "optimize-autoloader": true,
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "composer/installers": "^1.2",
+        "cweagans/composer-patches": "^1.6",
+        "drupal/config_devel": "^1.0",
+        "drupal/config_inspector": "^1.0@beta",
+        "drupal/core": "^8.5",
+        "drupal/devel": "^1.0",
+        "drupal/redis": "^1.0",
+        "webflo/drupal-finder": "^1.1",
+        "wikimedia/composer-merge-plugin": "~1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "scripts": {
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "post-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "@drupal-scaffold"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ]
+    },
+    "type": "project"
+}

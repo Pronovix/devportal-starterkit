@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="core/tests/bootstrap.php" colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         checkForUnintentionallyCoveredCode="false"
+         verbose="true"
+         debug="true"
+         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
+         >
+  <php>
+    <ini name="error_reporting" value="32767"/>
+    <ini name="memory_limit" value="-1"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/app/web/sites/simpletest/browser_output"/>
+
+  <env name="SIMPLETEST_BASE_URL" value="http://nginx:8080" />
+  </php>
+  <testsuites>
+    <testsuite name="unit">
+        <file>./core/tests/TestSuites/UnitTestSuite.php</file>
+    </testsuite>
+    <testsuite name="kernel">
+        <file>./core/tests/TestSuites/KernelTestSuite.php</file>
+    </testsuite>
+    <testsuite name="functional">
+        <file>./core/tests/TestSuites/FunctionalTestSuite.php</file>
+    </testsuite>
+    <testsuite name="functional-javascript">
+        <file>./core/tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
+    </testsuite>
+  </testsuites>
+  <listeners>
+  </listeners>
+  <filter>
+    <whitelist>
+        <directory>./core/includes</directory>
+        <directory>./core/lib</directory>
+        <directory>./core/modules</directory>
+        <directory>./core/modules</directory>
+        <directory>./core/sites</directory>
+      <exclude>
+        <directory suffix="Test.php">./</directory>
+        <directory suffix="TestBase.php">./</directory>
+      </exclude>
+     </whitelist>
+  </filter>
+</phpunit>
