@@ -37,6 +37,9 @@ services:
       - container:amazeeio-ssh-agent
     environment:
       << : *default-environment # loads the defined environment variables from the top
+    networks:
+      - default
+      - web
 
   nginx:
     build:
@@ -54,8 +57,12 @@ services:
       << : *default-environment # loads the defined environment variables from the top
       LAGOON_LOCALDEV_URL: nginx.CHANGEME.docker.amazee.io # generate another route for nginx, by default we go via varnish
     networks:
-      - amazeeio-network
-      - default
+      amazeeio-network:
+      default:
+      web:
+        aliases:
+          - CHANGEME.docker.amazee.io
+          - nginx.CHANGEME.docker.amazee.io
 
   php:
     build:
@@ -72,6 +79,9 @@ services:
       - cli # basically just tells docker-compose to build the cli first
     environment:
       << : *default-environment # loads the defined environment variables from the top
+    networks:
+      - default
+      - web
 
 
   postgres:
@@ -115,4 +125,6 @@ services:
 
 networks:
   amazeeio-network:
+    external: true
+  web:
     external: true
