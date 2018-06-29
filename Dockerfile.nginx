@@ -4,6 +4,7 @@ FROM ${CLI_IMAGE} as cli
 FROM amazeeio/nginx-drupal
 
 COPY fastcgi.conf /etc/nginx/fastcgi.conf
+COPY app.conf /etc/nginx/conf.d/app.conf
 
 COPY --from=cli /app /app
 
