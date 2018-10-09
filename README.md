@@ -22,8 +22,7 @@ This is only needed if you don't already have `pygmy` installed.
 
 * Create your settings.local.php file: 
 `sudo cp web/sites/example.settings.local.php web/sites/default/settings.local.php`
-* Configure the database connection and trusted hosts by adding the following 
-lines to settings.local.php:
+* Add the following lines to settings.local.php:
 
 If you use MariaDB:
 ```
@@ -43,6 +42,11 @@ $settings['trusted_host_patterns'] = [
   '^nginx.CHANGEME.docker.amazee.io$',
   '^nginx$',
 ];
+
+if (!drupal_installation_attempted()) {
+   $settings['cache']['default'] = 'cache.backend.redis';
+   $settings['redis.connection']['host'] = 'redis';
+}
 ```
 If you use Postgres:
 ```
@@ -62,6 +66,11 @@ $settings['trusted_host_patterns'] = [
   '^nginx.CHANGEME.docker.amazee.io$',
   '^nginx$',
 ];
+
+if (!drupal_installation_attempted()) {
+   $settings['cache']['default'] = 'cache.backend.redis';
+   $settings['redis.connection']['host'] = 'redis';
+}
 ```
 * Run `drush si config_installer --account-name=admin --account-pass=admin` 
 and wait until your site gets installed. _(This step can be skipped if you would 
