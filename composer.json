@@ -31,7 +31,11 @@
             "excludes": [
                 ".htaccess",
                 "robots.txt"
-            ]
+            ],
+            "initial": {
+                ".editorconfig": "../.editorconfig",
+                ".gitattributes": "../.gitattributes"
+            }
         },
         "installer-paths": {
             "drush/contrib/{$name}": [
@@ -60,11 +64,6 @@
             "merge-extra": false,
             "recurse": false,
             "replace": false
-        },
-        "patches": {
-			"drupal/core": {
-                "Time Ago summary does not render on Manage Display for Datetime": "https://www.drupal.org/files/issues/2686409-45.patch"
-            }
         }
     },
     "license": "GPL-2.0+",
@@ -81,12 +80,14 @@
     "require": {
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
+        "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/config_devel": "^1.0",
         "drupal/config_inspector": "^1.0@beta",
         "drupal/core": "^8.5",
         "drupal/devel": "^1.0",
         "drupal/redis": "^1.0",
         "webflo/drupal-finder": "^1.1",
+        "webmozart/path-util": "^2.3",
         "wikimedia/composer-merge-plugin": "~1.3"
     },
     "require-dev": {
@@ -99,6 +100,7 @@
             "@drupal-scaffold"
         ],
         "post-update-cmd": [
+            "@composer drupal:scaffold",
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],
         "pre-install-cmd": [
