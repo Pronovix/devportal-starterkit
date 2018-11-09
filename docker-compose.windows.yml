@@ -1,0 +1,8 @@
+version: '2.3'
+
+# Windows specific override
+
+services:
+  nginx:
+    ports:
+      - "80:8080"

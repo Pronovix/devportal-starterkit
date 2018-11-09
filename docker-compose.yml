@@ -33,8 +33,6 @@ services:
       lagoon.persistent.name: nginx # mount the persistent storage of nginx into this container
       lagoon.persistent: /app/web/sites/default/files/ # location where the persistent storage should be mounted
     << : *default-volumes # loads the defined volumes from the top
-    volumes_from: # mount the ssh-agent from the pygmy or cachalot ssh-agent
-      - container:amazeeio-ssh-agent
     environment:
       << : *default-environment # loads the defined environment variables from the top
     networks:
@@ -83,7 +81,6 @@ services:
       - default
       - web
 
-
   postgres:
     image: amazeeio/postgres-drupal
     labels:
@@ -93,15 +90,14 @@ services:
     environment:
       << : *default-environment
 
-#  Remove the comment from this section if you need mariadb as database backend and remove "postgres" from the services.
-#  mariadb:
-#    image: amazeeio/mariadb-drupal
-#    labels:
-#      lagoon.type: mariadb
-#    ports:
-#      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
-#    environment:
-#      << : *default-environment
+  mariadb:
+    image: amazeeio/mariadb-drupal
+    labels:
+      lagoon.type: mariadb
+    ports:
+      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    environment:
+      << : *default-environment
 
   redis:
     image: amazeeio/redis
@@ -118,7 +114,6 @@ services:
       - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
     environment:
       << : *default-environment
-
 
   varnish:
     image: amazeeio/varnish-drupal

@@ -1,0 +1,8 @@
+version: '2.3'
+
+# Linux and macOS specific override
+
+services:
+  cli:
+    volumes_from: # mount the ssh-agent from the pygmy or cachalot ssh-agent
+      - container:amazeeio-ssh-agent

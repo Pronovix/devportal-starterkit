@@ -13,10 +13,11 @@ This is only needed if you don't already have `pygmy` installed.
 ### Setup the containers
 
 * Clone the repository
-* Run `grep -rn CHANGEME .` and change the `CHANGEME` string to the project's name.
-* `composer install`
-* Start pygmy: `pygmy up`
+* Run `grep -rn CHANGEME .` and change the `CHANGEME` string to the project's name. To avoid headaches, make sure that the project name only contains alphanumeric characters (no dashes or underscores).
+* Copy `docker-compose.unix.yml` or `docker-compose.windows.yml` as `docker-compose.override.yml`, depending on the host operating system.
+* Start pygmy: `pygmy up` (only on Linux or macOS)
 * Then run `docker-compose up --build -d`
+* `composer install` or `docker-compose run --rm cli sh -c 'composer install'`
 
 ### Setup the site
 
@@ -41,6 +42,7 @@ $settings['trusted_host_patterns'] = [
   '^CHANGEME.docker.amazee.io$',
   '^nginx.CHANGEME.docker.amazee.io$',
   '^nginx$',
+  '^localhost$',
 ];
 
 if (!drupal_installation_attempted()) {
@@ -65,6 +67,7 @@ $settings['trusted_host_patterns'] = [
   '^CHANGEME.docker.amazee.io$',
   '^nginx.CHANGEME.docker.amazee.io$',
   '^nginx$',
+  '^localhost$',
 ];
 
 if (!drupal_installation_attempted()) {
@@ -94,7 +97,7 @@ like to import an existing database_).
   
 ## Usual commands
 
-* `docker-compose run cli sh`
+* `docker-compose run --rm cli sh`
 
   To run commands inside the container.
   
@@ -104,11 +107,11 @@ like to import an existing database_).
   
 * `docker-compose stop`
 
-  Shuts down the containers (saves the state).
+  Shuts down the containers (keeps the state).
   
 * `docker-compose down`
 
-  Destroys the containers (cannot restore state).
+  Destroys the containers (permanently deletes the state).
 
 ## Running tests (optional)
 
