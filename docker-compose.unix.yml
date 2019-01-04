@@ -6,3 +6,12 @@ services:
   cli:
     volumes_from: # mount the ssh-agent from the pygmy or cachalot ssh-agent
       - container:amazeeio-ssh-agent
+    # Linux-only: host.docker.internal doesn't exists, see: https://github.com/docker/for-linux/issues/264
+    # To find the value for IP, run: docker-compose run --rm cli sh -c "route -n | awk '/UG[ \t]/{print \$2}'"
+    #extra_hosts:
+    #  - "host.docker.internal:IP"
+
+  php:
+    # See above at cli.
+    #extra_hosts:
+    #  - "host.docker.internal:IP"

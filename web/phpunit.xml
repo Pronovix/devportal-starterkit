@@ -13,8 +13,7 @@
     <ini name="error_reporting" value="32767"/>
     <ini name="memory_limit" value="-1"/>
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/app/web/sites/simpletest/browser_output"/>
-
-  <env name="SIMPLETEST_BASE_URL" value="http://nginx:8080" />
+    <env name="SIMPLETEST_BASE_URL" value="http://nginx:8080" />
   </php>
   <testsuites>
     <testsuite name="unit">
@@ -32,6 +31,9 @@
   </testsuites>
   <listeners>
   </listeners>
+  <logging>
+    <log type="junit" target="/tmp/junit-pipe" />
+  </logging>
   <filter>
     <whitelist>
         <directory>./core/includes</directory>

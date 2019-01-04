@@ -4,28 +4,31 @@ This repository is using Amazee's containers.
 
 ## Setup
 
-### Install pygmy
+### Install and start pygmy
 
-* Run `gem install pygmy`
+To install `pygmy`, run `gem install pygmy`. This is only needed if you don't already have `pygmy` installed.
 
-This is only needed if you don't already have `pygmy` installed.
+Start pygmy: `pygmy up` (only on Linux or macOS)
 
 ### Setup the containers
 
-* Clone the repository
-* Run `grep -rn CHANGEME .` and change the `CHANGEME` string to the project's name. To avoid headaches, make sure that the project name only contains alphanumeric characters (no dashes or underscores).
-* Copy `docker-compose.unix.yml` or `docker-compose.windows.yml` as `docker-compose.override.yml`, depending on the host operating system.
-* Start pygmy: `pygmy up` (only on Linux or macOS)
+* `composer create-project Pronovix/devportal-starterkit $DEVPORTAL_NAME`
+* Copy `docker-compose.unix.yml` or `docker-compose.windows.yml` as `docker-compose.override.yml`, depending on the 
+  host operating system.
 * Then run `docker-compose up --build -d`
-* `composer install` or `docker-compose run --rm cli sh -c 'composer install'`
+* `docker-compose run --rm cli sh -c 'composer install'`
 
 ### Setup the site
 
 * Create your settings.local.php file: 
-`sudo cp web/sites/example.settings.local.php web/sites/default/settings.local.php`
-* Add the following lines to settings.local.php:
+  `cp web/sites/example.settings.local.php web/sites/default/settings.local.php`
+* Create your settings.php file:
+  `cp web/sites/default/default.settings.php web/sites/default/settings.php`
+* Uncomment the inclusion of `settings.local.php` from the bottom of `web/sites/default/settings.php`.
+* Add the following code to settings.local.php:
 
 If you use MariaDB:
+
 ```
 $databases['default']['default'] = [
   'database' => 'drupal',
@@ -37,20 +40,10 @@ $databases['default']['default'] = [
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 ];
-  
-$settings['trusted_host_patterns'] = [
-  '^CHANGEME.docker.amazee.io$',
-  '^nginx.CHANGEME.docker.amazee.io$',
-  '^nginx$',
-  '^localhost$',
-];
-
-if (!drupal_installation_attempted()) {
-   $settings['cache']['default'] = 'cache.backend.redis';
-   $settings['redis.connection']['host'] = 'redis';
-}
 ```
+
 If you use Postgres:
+
 ```
 $databases['default']['default'] = [
   'database' => 'drupal',
@@ -62,22 +55,60 @@ $databases['default']['default'] = [
   'namespace' => 'Drupal\\Core\\Database\\Driver\\pgsql',
   'driver' => 'pgsql',
 ];
-  
+```
+
+Add the following snippet as well. Look up the lagoon project name from `docker-compose.yml`, and replace `$PROJECT` 
+with it in the following snippet:
+
+```
 $settings['trusted_host_patterns'] = [
-  '^CHANGEME.docker.amazee.io$',
-  '^nginx.CHANGEME.docker.amazee.io$',
+  '^$PROJECT.docker.amazee.io$',
+  '^nginx.$PROJECT.docker.amazee.io$',
   '^nginx$',
   '^localhost$',
 ];
 
 if (!drupal_installation_attempted()) {
-   $settings['cache']['default'] = 'cache.backend.redis';
-   $settings['redis.connection']['host'] = 'redis';
+  $settings['cache']['default'] = 'cache.backend.redis';
+  $settings['redis.connection']['host'] = 'redis';
+  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+  $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+  $class_loader->addPsr4('Drupal\\redis\\', 'modules/contrib/redis/src');
+  $settings['bootstrap_container_definition'] = [
+    'parameters' => [],
+    'services' => [
+      'redis.factory' => [
+        'class' => 'Drupal\redis\ClientFactory',
+      ],
+      'cache.backend.redis' => [
+        'class' => 'Drupal\redis\Cache\CacheBackendFactory',
+        'arguments' => ['@redis.factory', '@cache_tags_provider.container', '@serialization.phpserialize'],
+      ],
+      'cache.container' => [
+        'class' => '\Drupal\redis\Cache\PhpRedis',
+        'factory' => ['@cache.backend.redis', 'get'],
+        'arguments' => ['container'],
+      ],
+      'cache_tags_provider.container' => [
+        'class' => 'Drupal\redis\Cache\RedisCacheTagsChecksum',
+        'arguments' => ['@redis.factory'],
+      ],
+      'serialization.phpserialize' => [
+        'class' => 'Drupal\Component\Serialization\PhpSerialize',
+      ],
+    ],
+  ];
 }
+
+$config_directories['sync'] = '../config/sync';
 ```
-* Run `drush si config_installer --account-name=admin --account-pass=admin` 
-and wait until your site gets installed. _(This step can be skipped if you would 
-like to import an existing database_).
+
+* Inside the `cli` container, run `drush si $PROFILE --account-name=admin --account-pass=admin` where `$PROFILE` can be
+either `config_installer` (if you already have configuration inside `config/sync`) or `standard` (completely new 
+project). Wait until your site gets installed. _(This step can be skipped if you would 
+like to import an existing database)._
+
+While it is not strictly necessary to enable the redis module, it is recommended.
   
 ## Import database and public files
 
@@ -89,11 +120,9 @@ like to import an existing database_).
 
 ### Import database
 
-* Extract the downloaded database archive: `gzip -d database.sql.gz`
-* Copy the database to the project's web folder: `cp database.sql /path/to/project/web`
+* Copy the database to the project's web folder: `cp database.sql.gz /path/to/project`
 * Go to the project directory: `cd /path/to/project`
-* Import the database with drush: `docker-compose run cli sh` then run
-`cd web && drush sql-cli < database.sql`.
+* Import the database with drush: `docker-compose run --rm cli sh -c 'zcat database.sql.gz | drush sqlc'`.
   
 ## Usual commands
 
@@ -112,6 +141,12 @@ like to import an existing database_).
 * `docker-compose down`
 
   Destroys the containers (permanently deletes the state).
+  
+## Debugging
+
+### Fixing xdebug on Linux
+
+Open `docker-compose.override.yml` and follow the instructions in the `cli` and `php` sections.
 
 ## Running tests (optional)
 
