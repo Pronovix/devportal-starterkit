@@ -108,7 +108,7 @@ either `config_installer` (if you already have configuration inside `config/sync
 project). Wait until your site gets installed. _(This step can be skipped if you would 
 like to import an existing database)._
 
-While it is not strictly necessary to enable the redis module, it is recommended.
+While it is not strictly necessary to enable the redis module, it is recommended to do so.
   
 ## Import database and public files
 
