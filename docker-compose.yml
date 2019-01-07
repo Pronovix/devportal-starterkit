@@ -19,6 +19,7 @@ x-environment:
     #LAGOON_ENVIRONMENT_TYPE: production
     # Uncomment to enable xdebug and then restart via `docker-compose up -d`
     XDEBUG_ENABLE: "true"
+    DOCKERHOST: "host.docker.internal"
 
 services:
 
