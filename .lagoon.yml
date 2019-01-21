@@ -1,18 +1,43 @@
 docker-compose-yaml: docker-compose.yml
 
 tasks:
+  pre-rollout:
+    - run:
+        name: drush sql-dump
+        command: |
+          if drush status --fields=bootstrap | grep -q "Successful"; then
+            # drupal installed, take a dump
+            mkdir -p /app/web/sites/default/files/private/ && drush sql-dump --ordered-dump --gzip --result-file=/app/web/sites/default/files/private/pre-deploy-dump-`date +%Y%m%d-%H%M%S`.sql.gz
+          fi
+        service: cli
   post-rollout:
     - run:
         name: env variables
         command: env
         service: cli
     - run:
-        name: IF no Drupal installed drush si with no email sending
+        name: IF no Drupal installed
         command: |
-            if [[ $(drush core-status bootstrap --pipe) == "" ]]; then
-                # no drupal installed, we install drupal from scratch
-                drush si config_installer -y --account-name=admin --account-pass=admin install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL
-            fi
+          # if [[ "$LAGOON_GIT_BRANCH" == *-si ]] && ! drush status --fields=bootstrap | grep -q "Successful"; then
+          #   # no drupal installed and branch name ends with "-si", install drupal from scratch
+          #   drush -y si config_installer -y --account-name=admin --account-pass=admin --sites-subdir=default \
+          #     install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL
+          # elif [[ "$LAGOON_ENVIRONMENT_TYPE" == development ]] && ! drush status --fields=bootstrap | grep -q "Successful"; then
+          #   # no drupal installed, sync database from production
+          #   drush -y sql-sync @lagoon-production default
+          #   drush -y updb
+          if ! drush status --fields=bootstrap | grep -q "Successful"; then
+            # no drupal installed, install drupal from scratch
+            drush -y si config_installer -y --account-name=admin --account-pass=admin --sites-subdir=default \
+              install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL
+          else
+            # drupal is installed, just run updb
+            drush -y updb
+          fi
+        service: cli
+    - run:
+        name: drush entup
+        command: drush -y entup
         service: cli
     - run:
         name: drush cim
@@ -23,15 +48,13 @@ tasks:
         command: drush -y cr
         service: cli
 
-
-
 environments:
-  master:
+#  production:
+#    routes:
+#      - nginx:
+#          - example.com
     cronjobs:
       - name: drush cron
         schedule: "*/15 * * * *"
         command: drush cron
         service: cli
-#   routes:
-#       - nginx:
-#           - "domain.com"
