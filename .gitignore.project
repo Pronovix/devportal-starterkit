@@ -7,7 +7,8 @@
 /web/modules/custom/devportal_pro/
 /web/themes/contrib/
 /web/profiles/contrib/
-/web/libraries
+/web/libraries/*
+!/web/libraries/swagger_ui/
 
 # Ignore sensitive information
 /web/sites/*/settings.local.php
