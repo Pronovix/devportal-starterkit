@@ -53,7 +53,8 @@
         },
         "merge-plugin": {
             "include": [
-                "web/modules/custom/*/composer.json"
+                "web/modules/custom/*/composer.json",
+                "web/modules/devportal/*/composer.json"
             ],
             "merge-extra": false,
             "recurse": false,
