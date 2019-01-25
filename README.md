@@ -141,6 +141,12 @@ While it is not strictly necessary to enable the redis module, it is recommended
 * `docker-compose down`
 
   Destroys the containers (permanently deletes the state).
+
+## Running Mailhog on Windows
+
+As Windows does not support Pygmy (which handles Mailhog on Linux/Mac), Mailhog should be added 
+separately as container (see docker-compose.windows.yml). After installing it with `docker-compose up -d`
+you can reach Mailhog by visiting http://localhost:8025/ in your browser. 
   
 ## Debugging
 
