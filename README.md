@@ -4,15 +4,28 @@ This repository is using Amazee's containers.
 
 ## Setup
 
-### Install and start pygmy
+### Requirements
+
+* git
+* docker
+
+### Install and start pygmy (Linux and macOS only)
 
 To install `pygmy`, run `gem install pygmy`. This is only needed if you don't already have `pygmy` installed.
 
-Start pygmy: `pygmy up` (only on Linux or macOS)
+Start pygmy: `pygmy up` 
+
+### Create a new project
+
+```
+docker run --rm -it -v $PWD:/app composer create-project Pronovix/devportal-starterkit -s dev --ignore-platform-reqs $DEVPORTAL_NAME
+```
+
+This command will create the project files with the containers. It will likely output errors about missing the `gd`
+extension. These errors can be ignored.
 
 ### Setup the containers
 
-* `composer create-project Pronovix/devportal-starterkit $DEVPORTAL_NAME`
 * Copy `docker-compose.unix.yml` or `docker-compose.windows.yml` as `docker-compose.override.yml`, depending on the 
   host operating system.
 * Then run `docker-compose up --build -d`
