@@ -39,7 +39,9 @@
                 "type:drupal-core"
             ],
             "web/libraries/{$name}": [
-                "type:drupal-library"
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
             ],
             "web/modules/contrib/{$name}": [
                 "type:drupal-module"
@@ -51,6 +53,10 @@
                 "type:drupal-theme"
             ]
         },
+        "installer-types": [
+            "bower-asset",
+            "npm-asset"
+        ],
         "merge-plugin": {
             "include": [
                 "web/modules/custom/*/composer.json",
@@ -70,6 +76,10 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
     "require": {
@@ -79,6 +89,7 @@
         "composer/installers": "^1.2",
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.5",
+        "drupal/admin_toolbar": "^1.26",
         "drupal/config_devel": "^1.0",
         "drupal/config_inspector": "^1.0@beta",
         "drupal/config_installer": "^1.8",
