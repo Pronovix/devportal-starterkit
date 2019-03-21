@@ -31,6 +31,17 @@
                 ".gitattributes": "../.gitattributes"
             }
         },
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
+        "patches": {
+            "drupal/core": {
+                "Install profile is disabled for lots of different reasons and core doesn't allow for that [#1170362]": "https://www.drupal.org/files/issues/1170362-239.patch",
+                "Node revision routes don't convert {node} param [#2730631]": "https://www.drupal.org/files/issues/2730631-13.patch",
+                "Outbound HTTP requests fail with KernelTestBase(TNG) [#2571475]": "https://www.drupal.org/files/issues/outbound_http_requests-2571475-10.patch",
+                "node_access filters out accessible nodes when node is left joined [#1349080]": "https://www.drupal.org/files/issues/2018-09-10/1349080-411.patch"
+            }
+        },
         "installer-paths": {
             "drush/contrib/{$name}": [
                 "type:drupal-drush"
