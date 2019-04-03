@@ -80,8 +80,6 @@ $databases['default']['default'] = [
 
 Add the following snippet as well.
 
-Look up the lagoon project name from `docker-compose.yml`, and replace `$PROJECT` with it in the following snippet:
-
 ```php
 $settings['trusted_host_patterns'] = [
   '^$PROJECT.docker.amazee.io$',
@@ -124,6 +122,8 @@ if (!drupal_installation_attempted()) {
 
 $config_directories['sync'] = '../config/sync';
 ```
+
+After adding this snippet to `settings.local.php` look up the lagoon project name from `docker-compose.yml` (e.g. `starterkit` in `starterkit.docker.amazee.io`), and replace `$PROJECT` with it.
 
 - Inside the `cli` container, run `drush si $PROFILE --account-name=admin --account-pass=admin` where `$PROFILE` can be
 either `config_installer` (if you already have configuration inside-`config/sync`) or `standard` (completely new
