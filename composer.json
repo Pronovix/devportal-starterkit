@@ -138,6 +138,9 @@
         "post-update-cmd": [
             "@composer drupal:scaffold",
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "post-create-project-cmd": [
+            "DevportalStarterKit\\composer\\ComposerScripts::initializeProject"
         ]
     },
     "type": "project"
