@@ -82,14 +82,15 @@ services:
       - default
       - web
 
-  postgres:
-    image: amazeeio/postgres-drupal
-    labels:
-      lagoon.type: postgres
-    ports:
-      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port postgres 3306`
-    environment:
-      << : *default-environment
+### Uncomment the following to enable PostgreSQL (and optionally comment out the mariadb block to disable MySQL).
+#  postgres:
+#    image: amazeeio/postgres-drupal
+#    labels:
+#      lagoon.type: postgres
+#    ports:
+#      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port postgres 3306`
+#    environment:
+#      << : *default-environment
 
   mariadb:
     image: amazeeio/mariadb-drupal
