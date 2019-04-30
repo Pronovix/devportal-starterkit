@@ -179,3 +179,13 @@ Open `docker-compose.override.yml` and follow the instructions in the `cli` and 
 ## Running tests (optional)
 
 `docker-compose run --rm php sh -c 'cd web; ./test.sh'`
+
+## Updating devportal themes and modules
+
+Once you've started using the starterkit and put modules/themes into the **web/modules/devportal** or 
+**web/themes/devportal** folder you'll eventually want to update them as well.
+
+1. From the terminal, change directory to project root (same level as the *README.md*)
+2. Run `sh scripts/devportal/update-themes-and-modules.sh`
+3. The script will now update any theme or module that exists in the **devportal** folder if your SSH key is properly
+set up for the Pronovix bitbucket repository
