@@ -91,6 +91,8 @@ services:
 #      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port postgres 3306`
 #    environment:
 #      << : *default-environment
+#    networks:
+#      - default
 
   mariadb:
     image: amazeeio/mariadb-drupal
@@ -100,6 +102,8 @@ services:
       - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
     environment:
       << : *default-environment
+    networks:
+      - default
 
   redis:
     image: amazeeio/redis
@@ -107,6 +111,8 @@ services:
       lagoon.type: redis
     environment:
       << : *default-environment
+    networks:
+      - default
 
   solr:
     image: amazeeio/solr:6.6-drupal
@@ -116,6 +122,8 @@ services:
       - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
     environment:
       << : *default-environment
+    networks:
+      - default
 
   varnish:
     image: amazeeio/varnish-drupal
