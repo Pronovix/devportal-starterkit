@@ -119,8 +119,10 @@
         "behat/mink-goutte-driver": "^1.2",
         "drupal/coder": "^8.3",
         "drupal/config_devel": "^1.2",
+        "drupal-composer/drupal-security-advisories" : "8.x-dev",
         "drupal/testtools": "^1.0",
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "roave/security-advisories": "dev-master"
     },
     "scripts": {
         "pre-install-cmd": [
