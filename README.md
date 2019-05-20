@@ -174,7 +174,7 @@ you can reach Mailhog by visiting http://localhost:8025/ in your browser.
 
 ### Fixing xdebug on Linux
 
-Open `docker-compose.override.yml` and follow the instructions in the `cli` and `php` sections.
+Open `docker-compose.unix.yml` and follow the instructions in the `cli` and `php` sections.
 
 ## Running tests (optional)
 
