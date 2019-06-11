@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PHPUNIT="../vendor/bin/phpunit -c ./core -v --debug --printer \Drupal\Tests\Listeners\HtmlOutputPrinter"
+PHPUNIT="../vendor/bin/phpunit -c ./core -v --debug --printer \Drupal\Tests\Listeners\HtmlOutputPrinter --log-junit /tmp/junit-pipe"
 
 if [[ $# -eq 0 ]]; then
   if [[ ! -d ../vendor ]]; then
