@@ -21,4 +21,11 @@ services:
       - php
       - mariadb
       - redis
+      - webdriver
 
+  webdriver:
+    image: selenium/standalone-chrome:3
+    environment:
+      SE_OPTS: "-debug"
+    networks:
+      - default
