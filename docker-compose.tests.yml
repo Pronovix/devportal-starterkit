@@ -7,10 +7,14 @@ services:
   tests:
     image: *lagoon-project
     working_dir: /app/web
-    command: "sh -c 'sleep 5 ; ./test.sh'"
+    command: "sh -c 'sleep 5 ; ../test.sh'"
     environment:
       LAGOON_PROJECT: *lagoon-project
       LAGOON_ROUTE: http://CHANGEME.docker.amazee.io
+      SYMFONY_DEPRECATIONS_HELPER: disabled
+      SIMPLETEST_BASE_URL: "http://nginx:8080"
+      BROWSERTEST_OUTPUT_DIRECTORY: "/app/web/sites/simpletest/browser_output"
+      MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://webdriver:9515"]'
     volumes_from:
       - cli
     networks:
@@ -24,8 +28,15 @@ services:
       - webdriver
 
   webdriver:
-    image: selenium/standalone-chrome:3
-    environment:
-      SE_OPTS: "-debug"
+    image: drupalci/webdriver-chromedriver:production
+    ulimits:
+      core:
+        soft: -1
+        hard: -1
+    entrypoint:
+      - "chromedriver"
+      - "--log-path=/tmp/chromedriver.log"
+      - "--verbose"
+      - "--whitelisted-ips="
     networks:
       - default

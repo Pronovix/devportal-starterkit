@@ -178,7 +178,7 @@ Open `docker-compose.override.yml` and follow the instructions in the `cli` and 
 
 ## Running tests (optional)
 
-`docker-compose run --rm php sh -c 'cd web; ./test.sh'`
+`docker-compose -f docker-compose.yml -f docker-compose.tests.yml -f docker-compose.override.yml run --rm tests`
 
 ## Updating devportal themes and modules
 
