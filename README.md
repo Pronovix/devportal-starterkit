@@ -28,14 +28,15 @@ docker run --rm -it -v $PWD:/app --user $(id -u):$(id -g) composer \
 ```
 
 This command will create the project files with the containers.
-It is possible that there will be some error output about missing the `gd` extension.
+It is possible that there will be some error output about missing the `gd` 
+extension.
 
 These errors can be ignored.
 
 ## Setup the containers
 
-- Copy `docker-compose.unix.yml` or `docker-compose.windows.yml` as `docker-compose.override.yml`, depending on the
-  host operating system.
+- Copy `docker-compose.unix.yml` or `docker-compose.windows.yml` as 
+  `docker-compose.override.yml`, depending on the host operating system.
 - Then run `docker-compose up --build -d`
 - `docker-compose run --rm cli sh -c 'composer install'`
 
@@ -45,7 +46,8 @@ These errors can be ignored.
   `cp web/sites/example.settings.local.php web/sites/default/settings.local.php`
 - Create your settings.php file:
   `cp web/sites/default/default.settings.php web/sites/default/settings.php`
-- Uncomment the inclusion of `settings.local.php` from the bottom of `web/sites/default/settings.php`.
+- Uncomment the inclusion of `settings.local.php` from the bottom of 
+  `web/sites/default/settings.php`.
 - Add the following code to settings.local.php:
 
 If you use MariaDB:
@@ -123,14 +125,18 @@ if (!drupal_installation_attempted()) {
 $config_directories['sync'] = '../config/sync';
 ```
 
-After adding this snippet to `settings.local.php` look up the lagoon project name from `docker-compose.yml` (e.g. `starterkit` in `starterkit.docker.amazee.io`), and replace `$PROJECT` with it.
+- After adding this snippet to `settings.local.php` look up the lagoon project 
+  name from `docker-compose.yml` (e.g. `starterkit` in 
+  `starterkit.docker.amazee.io`), and replace `$PROJECT` with it.
+- Inside the `cli` container, run 
+  `drush si $PROFILE --account-name=admin --account-pass=admin` where `$PROFILE` 
+  can be either `config_installer` (if you already have configuration inside 
+  `config/sync`) or `standard` (completely new project). Wait until your site 
+  gets installed. _(This step can be skipped if you would like to import an 
+  existing database)._
 
-- Inside the `cli` container, run `drush si $PROFILE --account-name=admin --account-pass=admin` where `$PROFILE` can be
-either `config_installer` (if you already have configuration inside-`config/sync`) or `standard` (completely new
-project). Wait until your site gets installed. _(This step can be skipped if you would
-like to import an existing database)._
-
-While it is not strictly necessary to enable the redis module, it is recommended to do so.
+While it is not strictly necessary to enable the redis module, it is recommended 
+to do so.
 
 ## Import database and public files
 
@@ -142,9 +148,11 @@ While it is not strictly necessary to enable the redis module, it is recommended
 
 ### Import database
 
-- Copy the database to the project's web folder: `cp database.sql.gz /path/to/project`
+- Copy the database to the project's web folder: 
+  `cp database.sql.gz /path/to/project`
 - Go to the project directory: `cd /path/to/project`
-- Import the database with drush: `docker-compose run --rm cli sh -c 'zcat database.sql.gz | drush sqlc'`.
+- Import the database with drush: 
+  `docker-compose run --rm cli sh -c 'zcat database.sql.gz | drush sqlc'`.
 
 ## Usual commands
 
@@ -163,29 +171,36 @@ While it is not strictly necessary to enable the redis module, it is recommended
 - `docker-compose down`
 
   Destroys the containers (permanently deletes the state).
+  
+## Gulp
+
+Copy `.env.js` as `env.js` into the project root from 
+[the Gulp component](https://github.com/Pronovix/gulp).
+
+- Build CSS: `docker-compose run --rm gulp sh -c 'npm run gulp'` 
+- Watch SCSS changes: `docker-compose run --rm gulp sh -c 'npm run gulp watch'`
+- Non-minified CSS with source maps: 
+  `docker-compose run --rm gulp sh -c 'npm run gulp watch -- --debug'`
+  (standalone `--` is needed to pass an argument to Gulp)
 
 ## Running Mailhog on Windows
 
-As Windows does not support Pygmy (which handles Mailhog on Linux/Mac), Mailhog should be added
-separately as container (see docker-compose.windows.yml). After installing it with `docker-compose up -d`
+As Windows does not support Pygmy (which handles Mailhog on Linux/Mac), Mailhog 
+should be added separately as container (see docker-compose.windows.yml). After 
+installing it with `docker-compose up -d`
 you can reach Mailhog by visiting http://localhost:8025/ in your browser.
 
 ## Debugging
 
 ### Fixing xdebug on Linux
 
-Open `docker-compose.override.yml` and follow the instructions in the `cli` and `php` sections.
+Open `docker-compose.override.yml` and follow the instructions in the `cli` and 
+`php` sections.
 
 ## Running tests (optional)
 
-`docker-compose -f docker-compose.yml -f docker-compose.tests.yml -f docker-compose.override.yml run --rm tests`
-
-## Updating devportal themes and modules
-
-Once you've started using the starterkit and put modules/themes into the **web/modules/devportal** or 
-**web/themes/devportal** folder you'll eventually want to update them as well.
-
-1. From the terminal, change directory to project root (same level as the *README.md*)
-2. Run `sh scripts/devportal/update-themes-and-modules.sh`
-3. The script will now update any theme or module that exists in the **devportal** folder if your SSH key is properly
-set up for the Pronovix bitbucket repository
+```shell
+docker-compose -f docker-compose.yml \
+  -f docker-compose.tests.yml -f docker-compose.override.yml \
+  run --rm tests
+```
