@@ -138,6 +138,11 @@ services:
       - amazeeio-network
       - default
 
+  gulp:
+    image: pronovix/gulp
+    volumes:
+      - .:/build/app:delegated
+
 networks:
   amazeeio-network:
     external: true
