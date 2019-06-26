@@ -183,7 +183,7 @@ Copy `.env.js` as `env.js` into the project root from
   `docker-compose run --rm gulp sh -c 'npm run gulp watch -- --debug'`
   (standalone `--` is needed to pass an argument to Gulp)
   
-See the [the Gulp component](https://github.com/Pronovix/gulp) for
+See the [the Gulp component](https://github.com/Pronovix/gulp) for a
 troubleshooting guide.
 
 ## Running Mailhog on Windows
