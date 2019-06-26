@@ -31,6 +31,17 @@
                 ".gitattributes": "../.gitattributes"
             }
         },
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
+        "patches": {
+            "drupal/core": {
+                "Install profile is disabled for lots of different reasons and core doesn't allow for that [#1170362]": "https://www.drupal.org/files/issues/1170362-239.patch",
+                "Node revision routes don't convert {node} param [#2730631]": "https://www.drupal.org/files/issues/2730631-13.patch",
+                "Outbound HTTP requests fail with KernelTestBase(TNG) [#2571475]": "https://www.drupal.org/files/issues/outbound_http_requests-2571475-10.patch",
+                "node_access filters out accessible nodes when node is left joined [#1349080]": "https://www.drupal.org/files/issues/2018-09-10/1349080-411.patch"
+            }
+        },
         "installer-paths": {
             "drush/contrib/{$name}": [
                 "type:drupal-drush"
@@ -43,6 +54,7 @@
                 "type:bower-asset",
                 "type:npm-asset"
             ],
+            "web/libraries/swagger_ui": ["bower-asset/swagger-ui"],
             "web/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
@@ -90,45 +102,43 @@
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/admin_toolbar": "^1.26",
-        "drupal/config_devel": "^1.0",
         "drupal/config_inspector": "^1.0@beta",
         "drupal/config_installer": "^1.8",
         "drupal/core": "^8.6",
         "drupal/devel": "^1.0",
         "drupal/devportal": "^2.0@alpha",
-        "drupal/legal": "^1.0@RC",
-        "drupal/paragraphs": "^1.5",
         "drupal/redis": "^1.0",
-        "drupal/swagger_ui_formatter": "^2.0",
         "drush/drush": "^9.4",
         "webflo/drupal-finder": "^1.1",
         "webmozart/path-util": "^2.3",
         "wikimedia/composer-merge-plugin": "~1.3",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "zaporylie/composer-drupal-optimizations": "^1.0",
+        "oomphinc/composer-installers-extender": "^1.1"
     },
     "require-dev": {
         "behat/mink": "dev-master#9ea1cebe",
         "behat/mink-goutte-driver": "^1.2",
+        "behat/mink-selenium2-driver": "^1.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
         "drupal/coder": "^8.3",
         "drupal/config_devel": "^1.2",
         "drupal/testtools": "^1.0",
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "symfony/phpunit-bridge": "^4.3"
     },
     "scripts": {
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-        "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "@drupal-scaffold"
-        ],
-        "post-update-cmd": [
-            "@composer drupal:scaffold",
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ],
         "pre-install-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
         ],
         "pre-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "post-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "post-update-cmd": [
+            "@composer drupal:scaffold",
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
         ],
         "post-create-project-cmd": [
             "DevportalStarterKit\\composer\\ComposerScripts::initializeProject"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+PHPUNIT="../vendor/bin/phpunit -c ./core -v --debug --printer \Drupal\Tests\Listeners\HtmlOutputPrinter --log-junit /tmp/junit-pipe"
+
 if [[ $# -eq 0 ]]; then
   if [[ ! -d ../vendor ]]; then
     cd ..
@@ -22,7 +24,7 @@ if [[ $# -eq 0 ]]; then
 
   mkfifo /tmp/junit-pipe
   while true; do cat /tmp/junit-pipe >> /app/junit.xml; done &
-  ../testrunner -threads=16 -verbose -root=./modules/custom -command="../vendor/bin/phpunit"
+  ../testrunner -threads=16 -verbose -root=./modules/custom -command="$PHPUNIT"
   kill %1
 
   sed -i 's#</*testsuites>##' /app/junit.xml
@@ -32,5 +34,5 @@ if [[ $# -eq 0 ]]; then
   echo "</testsuites>" >> junit-tmp.xml
   mv junit-tmp.xml /app/junit.xml
 else
-  php -d xdebug.idekey=PHPSTORM -d xdebug.remote_autostart=1 -d xdebug.remote_host=$DOCKERHOST ../vendor/bin/phpunit ${@}
+  php -d xdebug.idekey=PHPSTORM -d xdebug.remote_autostart=1 -d xdebug.remote_host=$DOCKERHOST $PHPUNIT ${@}
 fi
