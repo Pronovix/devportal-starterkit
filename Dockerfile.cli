@@ -1,6 +1,7 @@
 FROM amazeeio/php:7.2-cli-drupal
 
-RUN apk add python build-base
+RUN apk add python build-base libc6-compat bzip2 bzip2-dev
+RUN docker-php-ext-install bz2
 COPY composer.json composer.lock /app/
 COPY scripts /app/scripts
 RUN composer install --no-dev
