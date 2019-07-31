@@ -22,9 +22,9 @@ Start pygmy: `pygmy up`
 ## Create a new project
 
 ``` shell
-docker run --rm -it -v $PWD:/app --user $(id -u):$(id -g) composer \
+docker run --rm -it -v $PWD:/app --user $(id -u):$(id -g) tamasd/composer \
  create-project Pronovix/devportal-starterkit \
- -s dev --ignore-platform-reqs $DEVPORTAL_NAME
+ -s dev $DEVPORTAL_NAME
 ```
 
 This command will create the project files with the containers.
