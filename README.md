@@ -175,7 +175,8 @@ to do so.
 ## Gulp
 
 Copy `.env.js` as `env.js` into the project root from 
-[the Gulp component](https://github.com/Pronovix/gulp).
+[the Gulp component](https://github.com/Pronovix/gulp) and and set your local
+theme paths.
 
 - Build CSS: `docker-compose run --rm gulp sh -c 'npm run gulp'` 
 - Watch SCSS changes: `docker-compose run --rm gulp sh -c 'npm run gulp watch'`
